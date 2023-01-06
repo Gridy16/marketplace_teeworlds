@@ -7,20 +7,21 @@
 const hre = require("hardhat");
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
+  
+  /*
+  A ContractFactory in ethers.js is an abstraction used to deploy new smart contracts,
+  so NFT_IPFS here is a factory for instances of our NFT contract.
+  */
+  const NFT_TEE = await ethers.getContractFactory("NFT_TEE");
 
-  const lockedAmount = hre.ethers.utils.parseEther("1");
+  // deploy the contract
+  const nft_tee = await NFT_TEE.deploy(metadataURL);
 
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  await nft_tee.deployed();
 
-  await lock.deployed();
+  // print the address of the deployed contract
+  console.log("NFT-IPFS Contract Address:", nft_tee.address);
 
-  console.log(
-    `Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
-  );
 }
 
 // We recommend this pattern to be able to use async/await everywhere

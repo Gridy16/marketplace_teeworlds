@@ -14,4 +14,4 @@ skin_feet = json_file["feet"]["filename"]
 skin_eyes = json_file["eyes"]["filename"]
 
 image = skin.Skins(skin_body, skin_marking, skin_decoration, skin_hands, skin_feet, skin_eyes)
-image.showskin()
+image.save()

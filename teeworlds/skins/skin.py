@@ -126,14 +126,14 @@ class Skins:
 
         return skin_image
 
-    def showskin(self):
+    def showskin(self, i):
         # image_body = body(Image.open(self.path_body))
         # image_eyes = eyes(Image.open(path_eyes))
         # image_feet = feet(Image.open(path_feet))
         # image_marking = Image.open(path_marking)
         skin = self.make_skin()
         skin.show()
-        skin.save("skin1.png", dpi=(1024, 1024))
+        skin.save(f"{os.path.dirname(__file__)}\skin{i}.png", dpi=(1024, 1024))
 
     # image_body.show()
     # image_eyes.show()

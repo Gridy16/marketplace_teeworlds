@@ -1,32 +1,34 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
+const { ethers } = require("hardhat");
 const hre = require("hardhat");
+const fs = require("fs");
 
 async function main() {
+  //get the signer that we will use to deploy
+  const [deployer] = await ethers.getSigners();
   
-  /*
-  A ContractFactory in ethers.js is an abstraction used to deploy new smart contracts,
-  so NFT_IPFS here is a factory for instances of our NFT contract.
-  */
-  const NFT_TEE = await ethers.getContractFactory("NFT_TEE");
+  //Get the NFTMarketplace smart contract object and deploy it
+  const NFT_Teeworlds = await hre.ethers.getContractFactory("NFT_Teeworlds");
 
-  // deploy the contract
-  const nft_tee = await NFT_TEE.deploy(metadataURL);
+  const nft_teeworlds = await NFT_Teeworlds.deploy();
 
-  await nft_tee.deployed();
+  await nft_teeworlds.deployed();
 
-  // print the address of the deployed contract
-  console.log("NFT-IPFS Contract Address:", nft_tee.address);
+  console.log("Smart contract address ", nft_teeworlds.address)
+  
+  //Pull the address and ABI out while you deploy, since that will be key in interacting with the smart contract later
+  const data = {
+    address: nft_teeworlds.address,
+    abi: JSON.parse(nft_teeworlds.interface.format('json'))
+  }
 
+  //This writes the ABI and address to the nft_teeworlds.json
+  //This data is then used by frontend files to connect with the smart contract
+  fs.writeFileSync('./src/abis/nft_teeworlds.json', JSON.stringify(data))
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
